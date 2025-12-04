@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Store - Portal</title>
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1828/1828466.png">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ff758c;
+            --secondary: #ff7eb3;
+            --text: #444;
+            --glass: rgba(255, 255, 255, 0.90);
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        /* Animated Background */
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glass Container */
+        .container {
+            position: relative;
+            width: 950px;
+            height: 600px;
+            background: var(--glass);
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            border: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- Left Side: Forms --- */
+        .forms-container {
+            flex: 1;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 { font-size: 2.2rem; margin-bottom: 5px; color: var(--text); }
+        .sub-text { color: #888; margin-bottom: 30px; font-size: 0.95rem; }
+
+        /* Stylish Inputs */
+        .input-field {
+            position: relative;
+            margin-bottom: 20px;
+            height: 55px;
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 55px;
+            display: grid;
+            grid-template-columns: 15% 85%;
+            padding: 0 0.4rem;
+            transition: 0.3s;
+        }
+
+        .input-field:focus-within {
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.2);
+            border: 1px solid var(--secondary);
+        }
+
+        .input-field i {
+            text-align: center;
+            line-height: 55px;
+            color: #acacac;
+            font-size: 1.1rem;
+        }
+
+        .input-field input {
+            background: none;
+            outline: none;
+            border: none;
+            line-height: 1;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            height: 50px;
+            border: none;
+            outline: none;
+            border-radius: 49px;
+            cursor: pointer;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin: 10px 0;
+            transition: 0.5s;
+            box-shadow: 0 10px 20px rgba(255, 117, 140, 0.3);
+        }
+
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
+
+        /* Toggle Text */
+        .social-text { padding: 0.7rem 0; font-size: 0.9rem; color: #666; text-align: center; }
+        .social-text span { color: var(--primary); cursor: pointer; font-weight: 600; text-decoration: underline; }
+
+        /* Form Animation Logic */
+        .form-content { display: none; animation: slideIn 0.6s ease; }
+        .form-content.active { display: block; }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* --- Right Side: Anime Visual --- */
+        .panels-container {
+            flex: 1.2;
+            position: relative;
+            background: linear-gradient(135deg, #fff0f3, #ffe6e9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Decorative Circles */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(-45deg, var(--primary), var(--secondary));
+            opacity: 0.1;
+        }
+        .c1 { width: 250px; height: 250px; top: -50px; right: -50px; }
+        .c2 { width: 150px; height: 150px; bottom: 50px; left: 50px; }
+
+        /* The Anime Image */
+        .image {
+            width: 120%;
+            transform: translateX(10%);
+            transition: 1.1s ease-in-out;
+            filter: drop-shadow(5px 10px 20px rgba(0,0,0,0.15));
+            /* Floating Animation */
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(10%); }
+            50% { transform: translateY(-20px) translateX(10%); }
+        }
+
+        /* Success Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px); display: none;
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-card {
+            background: white; padding: 40px; border-radius: 25px;
+            text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- FORMS AREA -->
+        <div class="forms-container">
+            <div class="logo"><i class="fa-solid fa-cloud-bolt"></i> ANIME STORE</div>
+
+            <!-- 1. LOGIN -->
+            <div id="login-form" class="form-content active">
+                <h2>Welcome Back</h2>
+                <p class="sub-text">Please login to your dashboard.</p>
+                
+                <form id="signinForm">
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        <input type="email" id="logEmail" placeholder="Email" required />
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="logPass" placeholder="Password" required />
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <p class="social-text">
+                        New here? <span onclick="switchMode('signup')">Create Account</span>
+                    </p>
+                </form>
+            </div>
+
+            <!-- 2. SIGN UP -->
+            <div id="signup-form" class="form-content">
+                <h2>Get Started</h2>
+                <p class="sub-text">Create your account in seconds.</p>
+                
+                <form id="registerForm">
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="regEmail" placeholder="Email Address" required />
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="regPass" placeholder="Password" required />
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-check-circle"></i>
+                        <input type="password" id="regPassConf" placeholder="Confirm Password" required />
+                    </div>
+                    <button type="submit" class="btn">Sign Up</button>
+                    <p class="social-text">
+                        Already have an account? <span onclick="switchMode('login')">Login</span>
+                    </p>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- IMAGE AREA -->
+        <div class="panels-container">
+            <div class="circle c1"></div>
+            <div class="circle c2"></div>
+            <!-- Anime Image (Includes Fallback) -->
+            <img src="https://i.ibb.co/Z6ZQF4y/your-anime-image.png" 
+                 onerror="this.src='https://i.pinimg.com/originals/18/38/52/18385220c3569805981509935560965e.png'" 
+                 class="image" 
+                 alt="Anime Character" />
+        </div>
+    </div>
+
+    <!-- CUTE SUCCESS POPUP -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-card">
+            <img src="https://media.tenor.com/images/1c8e983422e6f2eb50f83651356dc5b1/tenor.gif" 
+                 style="width: 100px; border-radius: 50%; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 117, 140, 0.3);">
+            <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 5px;">Success!</h3>
+            <p id="modalMsg" style="color: #888;">Entering the world...</p>
+        </div>
+    </div>
+
+    <!-- FIREBASE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // 🔥 YOUR PROVIDED FIREBASE CONFIG 🔥
+        const firebaseConfig = {
+            apiKey: "AIzaSyCo6W6Tzze5IvgcblQGvRssZcIUNlS9gQ0",
+            authDomain: "waisi-store.firebaseapp.com",
+            databaseURL: "https://waisi-store-default-rtdb.firebaseio.com",
+            projectId: "waisi-store",
+            storageBucket: "waisi-store.firebasestorage.app",
+            messagingSenderId: "670605149716",
+            appId: "1:670605149716:web:1c3becc5e7aa4c9b328901"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- Toggle Animation Logic ---
+        window.switchMode = (mode) => {
+            document.querySelectorAll('.form-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(mode + '-form').classList.add('active');
+        }
+
+        // --- Auto Redirect (If already logged in) ---
+        onAuthStateChanged(auth, user => {
+            if(user) window.location.href = "dashboard.html";
+        });
+
+        // --- LOGIN LOGIC ---
+        document.getElementById('signinForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('logEmail').value;
+            const pass = document.getElementById('logPass').value;
+            const btn = e.target.querySelector('button');
+            const original = btn.innerText;
+
+            btn.innerText = "Authenticating...";
+            btn.style.opacity = "0.8";
+
+            signInWithEmailAndPassword(auth, email, pass)
+                .then(async (cred) => {
+                    await setDoc(doc(db, "users", cred.user.uid), { email: email, lastLogin: new Date() }, { merge: true });
+                    showPopup("Welcome back!");
+                })
+                .catch(err => {
+                    alert("Error: " + err.message);
+                    btn.innerText = original;
+                    btn.style.opacity = "1";
+                });
+        });
+
+        // --- REGISTER LOGIC ---
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+            const conf = document.getElementById('regPassConf').value;
+            const btn = e.target.querySelector('button');
+            const original = btn.innerText;
+
+            if(pass !== conf) { alert("Passwords do not match!"); return; }
+
+            btn.innerText = "Creating Account...";
+            
+            createUserWithEmailAndPassword(auth, email, pass)
+                .then(async (cred) => {
+                    await setDoc(doc(db, "users", cred.user.uid), {
+                        email: email,
+                        role: "user",
+                        createdAt: new Date()
+                    });
+                    showPopup("Account Created!");
+                })
+                .catch(err => {
+                    alert("Error: " + err.message);
+                    btn.innerText = original;
+                });
+        });
+
+        function showPopup(msg) {
+            document.getElementById('modalMsg').innerText = msg;
+            document.getElementById('successModal').style.display = 'flex';
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+        }
+    </script>
+</body>
+</html>
