@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Waisi Store - Premium</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 🔥 CRISP LIVE CHAT 🔥 -->
+    <script type="text/javascript">
+        window.$crisp=[];
+        window.CRISP_WEBSITE_ID="4457f464-2c5f-4cae-abdc-ee22ebe288e5";
+        (function(){
+            d=document;
+            s=d.createElement("script");
+            s.src="https://client.crisp.chat/l.js";
+            s.async=1;
+            d.getElementsByTagName("head")[0].appendChild(s);
+        })();
+    </script>
+
+    <style>
+        /* --- THEME VARIABLES (DEFAULT DARK) --- */
+        :root {
+            --bg-dark: #050505;
+            --bg-panel: #121212;
+            --bg-input: #1a1a1a;
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --toast-bg: rgba(0, 0, 0, 0.9);
+            --shadow-color: rgba(0, 243, 255, 0.15);
+            --nav-bg: rgba(18, 18, 18, 0.98);
+        }
+
+        /* --- LIGHT THEME OVERRIDES --- */
+        [data-theme="light"] {
+            --bg-dark: #f0f2f5;
+            --bg-panel: #ffffff;
+            --bg-input: #f9f9f9;
+            --neon-blue: #007bff; /* Darker blue for light mode */
+            --neon-pink: #d63384; /* Darker pink */
+            --glass: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.1);
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --toast-bg: #333;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.98);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 90px;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- GLOW EFFECT (Subtle in Light Mode) --- */
+        body::before {
+            content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, var(--shadow-color), transparent 60%);
+            z-index: -1; pointer-events: none; transition: background 0.3s;
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        #toast-box {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 3000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .toast {
+            background: var(--toast-bg); border: 1px solid var(--neon-blue);
+            color: var(--neon-blue); padding: 12px 25px; border-radius: 50px;
+            font-size: 0.9rem; font-weight: 600; box-shadow: 0 0 15px var(--shadow-color);
+            animation: slideDown 0.4s ease forwards; pointer-events: auto;
+            display: flex; align-items: center; gap: 10px;
+        }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* --- HEADER --- */
+        .mobile-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            background: var(--nav-bg); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); z-index: 100;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+            transition: background 0.3s;
+        }
+        .logo-text {
+            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.2rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px var(--shadow-color);
+        }
+        .header-actions {
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        /* --- MARQUEE --- */
+        .marquee-container {
+            margin-top: 70px; width: 100%; overflow: hidden; background: var(--glass);
+            border-bottom: 1px solid var(--border); padding: 8px 0;
+            position: relative; display: none;
+        }
+        .marquee-content {
+            display: inline-block; white-space: nowrap;
+            animation: scrollText 15s linear infinite;
+            padding-left: 100%; color: var(--neon-blue); font-weight: 600; font-size: 0.9rem;
+        }
+        @keyframes scrollText { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+        /* --- LAYOUT --- */
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: var(--text-main);
+            border-left: 4px solid var(--neon-pink); padding-left: 15px;
+        }
+
+        /* --- GRID & CARDS --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .card {
+            background: var(--bg-panel); border: 1px solid var(--border); border-radius: 15px;
+            overflow: hidden; transition: 0.3s; position: relative;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--neon-blue); box-shadow: 0 5px 20px var(--shadow-color); }
+        .card-img { width: 100%; height: 160px; object-fit: cover; }
+        .card-body { padding: 12px; }
+        .card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .card-price { color: var(--neon-blue); font-weight: 700; font-size: 1.1rem; }
+
+        /* --- CART ITEMS --- */
+        .cart-item {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 15px; border-radius: 12px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .remove-btn { color: #ff4d4d; background: none; border: none; cursor: pointer; font-size: 1.2rem; }
+
+        /* --- ORDER & TICKET CARDS --- */
+        .data-card {
+            background: var(--glass); border: 1px solid var(--border); padding: 15px;
+            border-radius: 12px; margin-bottom: 15px;
+        }
+        .status-badge { padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; float: right; }
+        .s-pending { background: #ffc107; color: #000; }
+        .s-processing { background: var(--neon-blue); color: #000; }
+        .s-completed { background: #28a745; color: #fff; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            background: var(--nav-bg); border-top: 1px solid var(--border); z-index: 200;
+            display: flex; justify-content: space-around; align-items: center;
+            transition: background 0.3s;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: var(--text-muted); font-size: 0.7rem; text-decoration: none; position: relative;
+        }
+        .nav-item i { font-size: 1.4rem; transition: 0.3s; }
+        .nav-item.active { color: var(--neon-blue); }
+        .nav-item.active i { transform: translateY(-5px); }
+        
+        .cart-badge {
+            position: absolute; top: -5px; right: -5px; background: var(--neon-pink);
+            color: white; font-size: 0.7rem; width: 18px; height: 18px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
+        }
+
+        /* --- MODALS --- */
+        .modal {
+            position: fixed; inset: 0; background: var(--bg-dark); z-index: 2000;
+            display: none; flex-direction: column; overflow-y: auto;
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-header {
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: var(--nav-bg); z-index: 10;
+        }
+        .close-btn { background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
+
+        /* PRODUCT DETAIL */
+        .detail-img { width: 100%; height: 350px; object-fit: cover; border-bottom: 2px solid var(--neon-pink); }
+        .detail-content { padding: 25px; }
+        .btns-row { display: flex; gap: 15px; margin-top: 20px; }
+        
+        .btn {
+            flex: 1; padding: 15px; border: none; border-radius: 12px; font-weight: 700;
+            font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-cart { background: transparent; color: var(--text-main); border: 1px solid var(--text-main); }
+        .btn-buy { background: var(--neon-blue); color: black; box-shadow: 0 0 15px var(--shadow-color); }
+
+        /* FORMS */
+        input, textarea {
+            width: 100%; padding: 15px; background: var(--bg-input); border: 1px solid var(--border);
+            color: var(--text-main); border-radius: 10px; margin-bottom: 15px; outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--neon-blue); }
+
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div id="toast-box"></div>
+
+    <!-- HEADER (With Theme Toggle) -->
+    <div class="mobile-header">
+        <div class="logo-text"><i class="fa-solid fa-bolt"></i> WAISI STORE</div>
+        
+        <div class="header-actions">
+            <!-- Theme Toggle Button -->
+            <button onclick="toggleTheme()" style="background:transparent; border:none; color:var(--text-main); font-size:1.2rem; cursor:pointer;">
+                <i id="themeIcon" class="fa-solid fa-sun"></i>
+            </button>
+            
+            <!-- Logout Button -->
+            <button onclick="logout()" style="background:transparent; border:none; color:#ff4d4d; font-size:1.2rem; cursor:pointer;">
+                <i class="fa-solid fa-power-off"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MARQUEE -->
+    <div id="marqueeContainer" class="marquee-container">
+        <div class="marquee-content" id="marqueeText">Welcome!</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" style="margin-top: 20px;">
+        
+        <!-- 1. SHOP HOME -->
+        <div id="home" class="section active">
+            <div class="section-title">Trending</div>
+            <div class="grid" id="productGrid">
+                <p style="color:var(--text-muted);">Loading products...</p>
+            </div>
+        </div>
+
+        <!-- 2. CART -->
+        <div id="cart" class="section">
+            <div class="section-title">My Cart</div>
+            <div id="cartContainer"></div>
+            
+            <div id="cartTotalBox" style="margin-top:20px; display:none;">
+                <div style="display:flex; justify-content:space-between; font-size:1.2rem; font-weight:700; margin-bottom:20px;">
+                    <span>Total:</span>
+                    <span id="cartTotalDisplay" style="color:var(--neon-blue);">PKR 0</span>
+                </div>
+                <button class="btn btn-buy" style="width:100%" onclick="openCheckout('cart')">Checkout All</button>
+            </div>
+        </div>
+
+        <!-- 3. ORDERS -->
+        <div id="orders" class="section">
+            <div class="section-title">My Orders</div>
+            <div id="ordersContainer"></div>
+        </div>
+
+        <!-- 4. SUPPORT -->
+        <div id="support" class="section">
+            <div class="section-title">Support</div>
+            
+            <div style="background:var(--bg-panel); padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid var(--border);">
+                <form id="ticketForm">
+                    <textarea id="tMsg" rows="3" placeholder="Type message..." required></textarea>
+                    <button type="submit" class="btn btn-cart" style="width:100%">Send Ticket</button>
+                </form>
+            </div>
+            <div id="ticketHistory"></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+        <a href="#" onclick="nav('home')" class="nav-item active" id="btn-home">
+            <i class="fa-solid fa-store"></i> <span>Shop</span>
+        </a>
+        <a href="#" onclick="nav('cart')" class="nav-item" id="btn-cart">
+            <i class="fa-solid fa-cart-shopping"></i> <span>Cart</span>
+            <div id="cartCount" class="cart-badge" style="display:none;">0</div>
+        </a>
+        <a href="#" onclick="nav('orders')" class="nav-item" id="btn-orders">
+            <i class="fa-solid fa-box-open"></i> <span>Orders</span>
+        </a>
+        <a href="#" onclick="nav('support')" class="nav-item" id="btn-support">
+            <i class="fa-solid fa-headset"></i> <span>Support</span>
+        </a>
+    </div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="productModal" class="modal">
+        <div class="modal-header">
+            <h3>Details</h3>
+            <button class="close-btn" onclick="closeModal('productModal')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <img id="d-img" src="" class="detail-img">
+        <div class="detail-content">
+            <h1 id="d-name" style="font-size:1.6rem; margin-bottom:10px;">Name</h1>
+            <div id="d-price" style="font-size:1.4rem; color:var(--neon-blue); font-weight:700;">PKR 0</div>
+            <p style="color:var(--text-muted); margin:15px 0;">Best quality product. Order now!</p>
+            
+            <div class="btns-row">
+                <button class="btn btn-cart" onclick="addToCartCurrent()">
+                    <i class="fa-solid fa-plus"></i> Add to Cart
+                </button>
+                <button class="btn btn-buy" onclick="openCheckout('single')">
+                    Buy Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-header">
+            <h3>Checkout</h3>
+            <button class="close-btn" onclick="closeModal('checkoutModal')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="padding:20px;">
+            <p style="color:var(--text-muted); margin-bottom:20px;">Payment Method: <strong>Cash on Delivery (COD)</strong></p>
+            
+            <form id="orderForm">
+                <input type="hidden" id="checkoutType"> <!-- single or cart -->
+                
+                <label>Full Name</label>
+                <input type="text" id="fname" required>
+                <label>Phone</label>
+                <input type="tel" id="fphone" required>
+                <label>Address</label>
+                <textarea id="faddr" rows="3" required></textarea>
+                
+                <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
+                    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.1rem;">
+                        <span>Total to Pay:</span>
+                        <span id="finalTotal" style="color:var(--neon-blue);">PKR 0</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-buy" style="width:100%; margin-top:20px;">Confirm Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCo6W6Tzze5IvgcblQGvRssZcIUNlS9gQ0",
+            authDomain: "waisi-store.firebaseapp.com",
+            databaseURL: "https://waisi-store-default-rtdb.firebaseio.com",
+            projectId: "waisi-store",
+            storageBucket: "waisi-store.firebasestorage.app",
+            messagingSenderId: "670605149716",
+            appId: "1:670605149716:web:1c3becc5e7aa4c9b328901"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let userId = "";
+
+        // --- THEME TOGGLE LOGIC ---
+        window.toggleTheme = () => {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            
+            // Check current status
+            const isLight = body.getAttribute('data-theme') === 'light';
+            
+            if (isLight) {
+                // Switch to Dark
+                body.removeAttribute('data-theme');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Switch to Light
+                body.setAttribute('data-theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Apply saved theme on load
+        if(localStorage.getItem('theme') === 'light') {
+            document.body.setAttribute('data-theme', 'light');
+            document.getElementById('themeIcon').classList.replace('fa-sun', 'fa-moon');
+        }
+
+        // CART STATE
+        let cart = JSON.parse(localStorage.getItem('waisiCart')) || [];
+        let currentProduct = {}; 
+
+        // --- UI FUNCTIONS ---
+        const showToast = (msg) => {
+            const box = document.getElementById('toast-box');
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${msg}`;
+            box.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        };
+
+        window.nav = (id) => {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('btn-'+id).classList.add('active');
+            window.scrollTo(0,0);
+            if(id === 'cart') renderCart();
+        }
+
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        window.logout = () => signOut(auth).then(() => window.location.href = "index.html");
+
+        // --- CART LOGIC ---
+        function updateCartCount() {
+            const el = document.getElementById('cartCount');
+            el.innerText = cart.length;
+            el.style.display = cart.length > 0 ? 'flex' : 'none';
+            localStorage.setItem('waisiCart', JSON.stringify(cart));
+        }
+        updateCartCount();
+
+        window.addToCartCurrent = () => {
+            cart.push(currentProduct);
+            updateCartCount();
+            showToast("Added to Cart!");
+            closeModal('productModal');
+        }
+
+        window.removeFromCart = (index) => {
+            cart.splice(index, 1);
+            updateCartCount();
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartContainer');
+            const totalBox = document.getElementById('cartTotalBox');
+            container.innerHTML = "";
+            
+            if(cart.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:var(--text-muted); margin-top:30px;'>Your cart is empty.</p>";
+                totalBox.style.display = 'none';
+                return;
+            }
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += parseInt(item.price);
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <img src="${item.img}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
+                            <div>
+                                <div style="font-weight:600;">${item.name}</div>
+                                <div style="color:var(--neon-blue); font-size:0.9rem;">PKR ${item.price}</div>
+                            </div>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart(${index})"><i class="fa-solid fa-trash"></i></button>
+                    </div>`;
+            });
+            
+            document.getElementById('cartTotalDisplay').innerText = "PKR " + total;
+            totalBox.style.display = 'block';
+        }
+
+        // --- PRODUCT & CHECKOUT ---
+        window.viewProduct = (id, name, price, img) => {
+            currentProduct = { id, name, price, img };
+            document.getElementById('d-name').innerText = name;
+            document.getElementById('d-price').innerText = "PKR " + price;
+            document.getElementById('d-img').src = img;
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        window.openCheckout = (type) => {
+            document.getElementById('productModal').style.display = 'none';
+            document.getElementById('checkoutModal').style.display = 'flex';
+            document.getElementById('checkoutType').value = type;
+            
+            let total = 0;
+            if(type === 'single') total = currentProduct.price;
+            else cart.forEach(i => total += parseInt(i.price));
+            
+            document.getElementById('finalTotal').innerText = "PKR " + total;
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerText = "Processing...";
+            
+            const type = document.getElementById('checkoutType').value;
+            const fname = document.getElementById('fname').value;
+            const phone = document.getElementById('fphone').value;
+            const addr = document.getElementById('faddr').value;
+
+            try {
+                if(type === 'single') {
+                    await placeOrder(currentProduct, fname, phone, addr);
+                } else {
+                    for(const item of cart) {
+                        await placeOrder(item, fname, phone, addr);
+                    }
+                    cart = [];
+                    updateCartCount();
+                }
+
+                showToast("Order Placed Successfully!");
+                closeModal('checkoutModal');
+                nav('orders');
+                e.target.reset();
+            } catch(err) {
+                console.error(err);
+                showToast("Error occurred!");
+            }
+            btn.innerText = "Confirm Order";
+        });
+
+        async function placeOrder(item, name, phone, address) {
+            await addDoc(collection(db, "orders"), {
+                userId: userId,
+                userEmail: auth.currentUser.email,
+                productName: item.name,
+                total: item.price,
+                fullName: name,
+                phone: phone,
+                address: address,
+                status: "Pending",
+                createdAt: new Date()
+            });
+        }
+
+        // --- AUTH & LOAD DATA ---
+        onAuthStateChanged(auth, user => {
+            if(user) {
+                userId = user.uid;
+                showToast("Login Successful!");
+                loadMarquee();
+                loadProducts();
+                loadOrders();
+                loadTickets();
+                if(window.$crisp) $crisp.push(["set", "user:email", [user.email]]);
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        function loadMarquee() {
+            onSnapshot(doc(db, "settings", "marquee"), (doc) => {
+                if(doc.exists() && doc.data().isEnabled) {
+                    document.getElementById('marqueeContainer').style.display = "block";
+                    document.getElementById('marqueeText').innerText = doc.data().text;
+                }
+            });
+        }
+
+        async function loadProducts() {
+            const snap = await getDocs(collection(db, "products"));
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = "";
+            snap.forEach(d => {
+                const p = d.data();
+                grid.innerHTML += `
+                    <div class="card" onclick="viewProduct('${d.id}', '${p.name}', ${p.price}, '${p.image}')">
+                        <img src="${p.image}" class="card-img">
+                        <div class="card-body">
+                            <div class="card-title">${p.name}</div>
+                            <div class="card-price">PKR ${p.price}</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function loadOrders() {
+            const q = query(collection(db, "orders"), where("userId", "==", userId));
+            
+            onSnapshot(q, snap => {
+                const div = document.getElementById('ordersContainer');
+                div.innerHTML = "";
+                
+                let orders = [];
+                snap.forEach(doc => orders.push(doc.data()));
+                orders.sort((a,b) => b.createdAt - a.createdAt);
+
+                if(orders.length === 0) {
+                    div.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No orders found.</p>";
+                    return;
+                }
+
+                orders.forEach(o => {
+                    let badge = "s-pending";
+                    if(o.status === "Processing") badge = "s-processing";
+                    if(o.status === "Completed") badge = "s-completed";
+
+                    div.innerHTML += `
+                        <div class="data-card">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <span style="font-weight:700;">${o.productName}</span>
+                                <span class="status-badge ${badge}">${o.status}</span>
+                            </div>
+                            <div style="color:var(--neon-blue);">PKR ${o.total}</div>
+                            <small style="color:var(--text-muted);">${o.createdAt ? new Date(o.createdAt.seconds*1000).toLocaleDateString() : 'Just now'}</small>
+                        </div>`;
+                });
+            });
+        }
+
+        function loadTickets() {
+            const q = query(collection(db, "tickets"), where("userId", "==", userId));
+            
+            onSnapshot(q, snap => {
+                const div = document.getElementById('ticketHistory');
+                div.innerHTML = "";
+                
+                let tickets = [];
+                snap.forEach(doc => tickets.push(doc.data()));
+                tickets.sort((a,b) => b.createdAt - a.createdAt);
+
+                if(tickets.length === 0) {
+                    div.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>No tickets yet.</p>";
+                    return;
+                }
+
+                tickets.forEach(t => {
+                    div.innerHTML += `
+                        <div class="data-card">
+                            <p style="background:var(--bg-input); padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid var(--border);">
+                                ${t.message}
+                            </p>
+                            ${t.reply ? `
+                                <div style="background:rgba(188, 19, 254, 0.05); padding:10px; border-radius:8px; border-left:3px solid var(--neon-pink);">
+                                    <strong style="color:var(--neon-pink);">Admin:</strong> <span>${t.reply}</span>
+                                </div>` 
+                            : `<small style="color:var(--text-muted);">Waiting for reply...</small>`}
+                        </div>`;
+                });
+            });
+        }
+    </script>
+</body>
+</html>
