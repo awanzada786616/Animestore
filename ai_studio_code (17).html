@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Waisi Store - Premium</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 🔥 CRISP LIVE CHAT 🔥 -->
+    <script type="text/javascript">
+        window.$crisp=[];
+        window.CRISP_WEBSITE_ID="4457f464-2c5f-4cae-abdc-ee22ebe288e5";
+        (function(){
+            d=document;
+            s=d.createElement("script");
+            s.src="https://client.crisp.chat/l.js";
+            s.async=1;
+            d.getElementsByTagName("head")[0].appendChild(s);
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --bg-panel: #121212;
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 80px; /* Space for bottom nav */
+            overflow-x: hidden;
+        }
+
+        /* --- GLOWING BACKGROUND ANIMATION --- */
+        body::before {
+            content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.05), transparent 60%);
+            z-index: -1; pointer-events: none;
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        #toast-box {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 3000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .toast {
+            background: rgba(0, 0, 0, 0.9); border: 1px solid var(--neon-blue);
+            color: var(--neon-blue); padding: 12px 25px; border-radius: 50px;
+            font-size: 0.9rem; font-weight: 600; box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            animation: slideDown 0.4s ease forwards; pointer-events: auto;
+            display: flex; align-items: center; gap: 10px;
+        }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* --- HEADER & LOGO --- */
+        .mobile-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            background: rgba(18, 18, 18, 0.9); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); z-index: 100;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+        }
+        .logo-text {
+            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.2rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        /* --- MARQUEE --- */
+        .marquee-container {
+            margin-top: 70px; width: 100%; overflow: hidden; background: var(--glass);
+            border-bottom: 1px solid var(--border); padding: 8px 0;
+            position: relative; display: none; /* JS enables it */
+        }
+        .marquee-content {
+            display: inline-block; white-space: nowrap;
+            animation: scrollText 15s linear infinite;
+            padding-left: 100%; color: var(--neon-blue); font-weight: 600; font-size: 0.9rem;
+        }
+        @keyframes scrollText { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+        /* --- MAIN LAYOUT --- */
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: white;
+            border-left: 4px solid var(--neon-pink); padding-left: 15px;
+        }
+
+        /* --- PRODUCT GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .card {
+            background: var(--bg-panel); border: 1px solid var(--border); border-radius: 15px;
+            overflow: hidden; transition: 0.3s; position: relative;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--neon-blue); box-shadow: 0 5px 20px rgba(0, 243, 255, 0.15); }
+        .card-img { width: 100%; height: 160px; object-fit: cover; }
+        .card-body { padding: 12px; }
+        .card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-price { color: var(--neon-blue); font-weight: 700; font-size: 1.1rem; }
+        
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border); z-index: 200;
+            display: flex; justify-content: space-around; align-items: center;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #666; font-size: 0.7rem; text-decoration: none; transition: 0.3s;
+        }
+        .nav-item i { font-size: 1.4rem; }
+        .nav-item.active { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+        .nav-item.active i { transform: translateY(-3px); }
+
+        /* --- MODAL (Full Screen) --- */
+        .modal {
+            position: fixed; inset: 0; background: var(--bg-dark); z-index: 2000;
+            display: none; flex-direction: column; overflow-y: auto;
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-header {
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: rgba(5,5,5,0.9); z-index: 10;
+        }
+        .close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        /* Product Detail Styling */
+        .detail-img { width: 100%; height: 350px; object-fit: cover; border-bottom: 2px solid var(--neon-pink); }
+        .detail-content { padding: 25px; }
+        .detail-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; }
+        .detail-price { font-size: 1.5rem; color: var(--neon-blue); font-weight: 700; margin-bottom: 20px; }
+        
+        .action-btn {
+            width: 100%; padding: 16px; background: linear-gradient(90deg, var(--neon-blue), #00c3ff);
+            color: black; font-weight: 700; font-size: 1.1rem; border: none; border-radius: 12px;
+            cursor: pointer; box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); margin-top: 20px;
+        }
+
+        /* Order List Styling */
+        .order-card {
+            background: var(--glass); border: 1px solid var(--border); padding: 15px;
+            border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .s-pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
+        .s-processing { background: rgba(0, 243, 255, 0.2); color: var(--neon-blue); border: 1px solid var(--neon-blue); }
+        .s-completed { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745; }
+
+        /* Chat Styling */
+        .ticket-card {
+            background: var(--glass); border: 1px solid var(--border); padding: 20px;
+            border-radius: 15px; margin-bottom: 20px;
+        }
+        .msg-bubble {
+            padding: 10px 15px; border-radius: 10px; max-width: 85%; margin-top: 10px; font-size: 0.9rem;
+        }
+        .msg-user { background: rgba(255,255,255,0.1); color: white; margin-left: auto; border-top-right-radius: 0; }
+        .msg-admin {
+            background: rgba(188, 19, 254, 0.2); border: 1px solid var(--neon-pink);
+            color: white; margin-right: auto; border-top-left-radius: 0;
+            box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
+        }
+
+        /* Forms */
+        input, textarea {
+            width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333;
+            color: white; border-radius: 10px; margin-bottom: 15px; outline: none;
+        }
+        input:focus, textarea:focus { border-color: var(--neon-blue); }
+
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <!-- TOAST NOTIFICATIONS CONTAINER -->
+    <div id="toast-box"></div>
+
+    <!-- HEADER -->
+    <div class="mobile-header">
+        <div class="logo-text"><i class="fa-solid fa-bolt"></i> WAISI STORE</div>
+        <button onclick="logout()" style="background:rgba(255,0,0,0.1); border:1px solid rgba(255,0,0,0.3); padding:8px 12px; border-radius:8px; color:#ff4d4d; cursor:pointer;">
+            <i class="fa-solid fa-power-off"></i>
+        </button>
+    </div>
+
+    <!-- MARQUEE -->
+    <div id="marqueeContainer" class="marquee-container">
+        <div class="marquee-content" id="marqueeText">Welcome to Waisi Store Premium!</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" style="margin-top: 20px;">
+        
+        <!-- 1. SHOP HOME -->
+        <div id="home" class="section active">
+            <div class="section-title">Trending Now</div>
+            <div class="grid" id="productGrid">
+                <p style="color:#666;">Loading neon...</p>
+            </div>
+        </div>
+
+        <!-- 2. ORDERS -->
+        <div id="orders" class="section">
+            <div class="section-title">My Orders</div>
+            <div id="ordersContainer"></div>
+        </div>
+
+        <!-- 3. SUPPORT -->
+        <div id="support" class="section">
+            <div class="section-title">Support Center</div>
+            
+            <div style="background:var(--bg-panel); padding:20px; border-radius:15px; border:1px solid var(--border); margin-bottom:25px;">
+                <h4 style="margin-bottom:15px; color:var(--text-muted);">Create New Ticket</h4>
+                <form id="ticketForm">
+                    <textarea id="tMsg" rows="3" placeholder="Describe your issue..." required></textarea>
+                    <button type="submit" class="action-btn" style="margin-top:0; font-size:1rem; padding:12px;">Submit Ticket</button>
+                </form>
+            </div>
+
+            <div id="ticketHistory"></div>
+        </div>
+
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+        <a href="#" onclick="nav('home')" class="nav-item active" id="btn-home">
+            <i class="fa-solid fa-store"></i> <span>Shop</span>
+        </a>
+        <a href="#" onclick="nav('orders')" class="nav-item" id="btn-orders">
+            <i class="fa-solid fa-box-open"></i> <span>Orders</span>
+        </a>
+        <a href="#" onclick="nav('support')" class="nav-item" id="btn-support">
+            <i class="fa-solid fa-headset"></i> <span>Support</span>
+        </a>
+    </div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="productModal" class="modal">
+        <div class="modal-header">
+            <h3 style="font-family:'Orbitron', sans-serif;">Details</h3>
+            <button class="close-btn" onclick="closeModal('productModal')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <img id="d-img" src="" class="detail-img">
+        <div class="detail-content">
+            <h1 id="d-name" class="detail-title">Product Name</h1>
+            <div id="d-price" class="detail-price">PKR 0</div>
+            <p style="color:#aaa; line-height:1.6; margin-bottom:30px;">
+                Premium quality product from Waisi Store. Limited stock available. Order now to get the best deal.
+            </p>
+            
+            <button class="action-btn" onclick="openCheckout()">
+                <i class="fa-solid fa-cart-shopping"></i> Order Now
+            </button>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-header">
+            <h3>Checkout</h3>
+            <button class="close-btn" onclick="closeModal('checkoutModal')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="padding:20px;">
+            <div style="background:var(--bg-panel); padding:15px; border-radius:10px; display:flex; gap:15px; margin-bottom:20px; border:1px solid var(--border);">
+                <img id="c-img" src="" style="width:60px; height:60px; border-radius:8px; object-fit:cover;">
+                <div>
+                    <div id="c-name" style="font-weight:700;">Name</div>
+                    <div id="c-price" style="color:var(--neon-blue);">PKR 0</div>
+                </div>
+            </div>
+
+            <form id="orderForm">
+                <input type="hidden" id="c-id">
+                <label style="color:#888; font-size:0.85rem; margin-bottom:5px; display:block;">Full Name</label>
+                <input type="text" id="fname" required>
+                
+                <label style="color:#888; font-size:0.85rem; margin-bottom:5px; display:block;">Phone Number</label>
+                <input type="tel" id="fphone" required>
+                
+                <label style="color:#888; font-size:0.85rem; margin-bottom:5px; display:block;">Delivery Address</label>
+                <textarea id="faddr" rows="3" required></textarea>
+                
+                <button type="submit" class="action-btn">Confirm COD Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, orderBy, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // 🔥 FIREBASE CONFIG 🔥
+        const firebaseConfig = {
+            apiKey: "AIzaSyCo6W6Tzze5IvgcblQGvRssZcIUNlS9gQ0",
+            authDomain: "waisi-store.firebaseapp.com",
+            databaseURL: "https://waisi-store-default-rtdb.firebaseio.com",
+            projectId: "waisi-store",
+            storageBucket: "waisi-store.firebasestorage.app",
+            messagingSenderId: "670605149716",
+            appId: "1:670605149716:web:1c3becc5e7aa4c9b328901"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let userId = "";
+
+        // UI UTILS
+        const showToast = (msg, icon="fa-check-circle") => {
+            const box = document.getElementById('toast-box');
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerHTML = `<i class="fa-solid ${icon}"></i> ${msg}`;
+            box.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        };
+
+        window.nav = (id) => {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('btn-'+id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        window.logout = () => signOut(auth).then(() => window.location.href = "index.html");
+
+        // PRODUCT FLOW
+        window.viewProduct = (id, name, price, img) => {
+            // Fill Detail Modal
+            document.getElementById('d-name').innerText = name;
+            document.getElementById('d-price').innerText = "PKR " + price;
+            document.getElementById('d-img').src = img;
+            
+            // Fill Hidden Checkout Data
+            document.getElementById('c-id').value = id;
+            document.getElementById('c-name').innerText = name;
+            document.getElementById('c-price').innerText = "PKR " + price;
+            document.getElementById('c-img').src = img;
+
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        window.openCheckout = () => {
+            document.getElementById('productModal').style.display = 'none';
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        // AUTH & LISTENERS
+        onAuthStateChanged(auth, user => {
+            if(user) {
+                if(!userId) showToast(`Welcome back, ${user.email.split('@')[0]}!`);
+                userId = user.uid;
+                
+                loadMarquee();
+                loadProducts();
+                loadOrders();
+                loadTickets();
+                
+                if(window.$crisp) $crisp.push(["set", "user:email", [user.email]]);
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        // 1. MARQUEE
+        function loadMarquee() {
+            onSnapshot(doc(db, "settings", "marquee"), (doc) => {
+                if(doc.exists()) {
+                    const data = doc.data();
+                    const el = document.getElementById('marqueeContainer');
+                    if(data.isEnabled && data.text) {
+                        el.style.display = "block";
+                        document.getElementById('marqueeText').innerText = data.text;
+                    } else {
+                        el.style.display = "none";
+                    }
+                }
+            });
+        }
+
+        // 2. PRODUCTS (PKR)
+        async function loadProducts() {
+            const grid = document.getElementById('productGrid');
+            const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+            const snap = await getDocs(q);
+            grid.innerHTML = "";
+            snap.forEach(d => {
+                const p = d.data();
+                grid.innerHTML += `
+                    <div class="card" onclick="viewProduct('${d.id}', '${p.name}', ${p.price}, '${p.image}')">
+                        <img src="${p.image}" class="card-img">
+                        <div class="card-body">
+                            <div class="card-title">${p.name}</div>
+                            <div class="card-price">PKR ${p.price}</div>
+                        </div>
+                    </div>`;
+            });
+            if(snap.empty) grid.innerHTML = "<p style='color:white'>No products yet.</p>";
+        }
+
+        // 3. ORDERS (REALTIME)
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const txt = btn.innerText;
+            btn.innerText = "Processing...";
+            
+            try {
+                await addDoc(collection(db, "orders"), {
+                    userId: userId,
+                    userEmail: auth.currentUser.email,
+                    productName: document.getElementById('c-name').innerText,
+                    total: document.getElementById('c-price').innerText.replace('PKR ',''),
+                    fullName: document.getElementById('fname').value,
+                    phone: document.getElementById('fphone').value,
+                    address: document.getElementById('faddr').value,
+                    status: "Pending",
+                    createdAt: new Date()
+                });
+                showToast("Order Placed Successfully!");
+                closeModal('checkoutModal');
+                nav('orders');
+                e.target.reset();
+            } catch(err) {
+                showToast("Error placing order", "fa-circle-exclamation");
+            }
+            btn.innerText = txt;
+        });
+
+        function loadOrders() {
+            onSnapshot(query(collection(db, "orders"), where("userId", "==", userId), orderBy("createdAt", "desc")), snap => {
+                const div = document.getElementById('ordersContainer');
+                div.innerHTML = "";
+                if(snap.empty) {
+                    div.innerHTML = "<p style='color:#777; text-align:center;'>No orders found.</p>";
+                    return;
+                }
+                snap.forEach(d => {
+                    const o = d.data();
+                    let badgeClass = "s-pending";
+                    if(o.status === "Processing") badgeClass = "s-processing";
+                    if(o.status === "Completed") badgeClass = "s-completed";
+
+                    div.innerHTML += `
+                        <div class="order-card">
+                            <div>
+                                <div style="font-weight:700; font-size:1rem;">${o.productName}</div>
+                                <div style="color:var(--text-muted); font-size:0.9rem;">PKR ${o.total}</div>
+                            </div>
+                            <div class="status-badge ${badgeClass}">${o.status}</div>
+                        </div>`;
+                });
+            });
+        }
+
+        // 4. TICKETS (REALTIME & REPLIES)
+        document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await addDoc(collection(db, "tickets"), {
+                userId: userId,
+                userEmail: auth.currentUser.email,
+                message: document.getElementById('tMsg').value,
+                reply: "",
+                createdAt: new Date()
+            });
+            document.getElementById('tMsg').value = "";
+            showToast("Ticket Sent!");
+        });
+
+        function loadTickets() {
+            onSnapshot(query(collection(db, "tickets"), where("userId", "==", userId), orderBy("createdAt", "desc")), snap => {
+                const div = document.getElementById('ticketHistory');
+                div.innerHTML = "";
+                if(snap.empty) {
+                    div.innerHTML = "<p style='color:#777; text-align:center;'>No tickets yet.</p>";
+                    return;
+                }
+                snap.forEach(d => {
+                    const t = d.data();
+                    div.innerHTML += `
+                        <div class="ticket-card">
+                            <div style="font-size:0.75rem; color:#666; margin-bottom:5px;">
+                                ${t.createdAt && t.createdAt.seconds ? new Date(t.createdAt.seconds*1000).toLocaleString() : 'Just now'}
+                            </div>
+                            <div class="msg-bubble msg-user">${t.message}</div>
+                            ${t.reply ? `
+                                <div class="msg-bubble msg-admin">
+                                    <i class="fa-solid fa-user-astronaut"></i> <strong>Admin:</strong><br>${t.reply}
+                                </div>` : ''}
+                        </div>`;
+                });
+            });
+        }
+    </script>
+</body>
+</html>
