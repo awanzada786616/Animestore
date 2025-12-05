@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin Panel - Waisi Store</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- THEME VARIABLES (MATCHING USER DASHBOARD) --- */
+        :root {
+            --bg-dark: #050505;
+            --bg-panel: #121212;
+            --bg-input: #1a1a1a;
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --nav-bg: rgba(18, 18, 18, 0.98);
+        }
+
+        [data-theme="light"] {
+            --bg-dark: #f4f6f8;
+            --bg-panel: #ffffff;
+            --bg-input: #f9f9f9;
+            --neon-blue: #007bff;
+            --neon-pink: #d63384;
+            --glass: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.1);
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --nav-bg: rgba(255, 255, 255, 0.98);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            transition: 0.3s;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px; height: 100vh;
+            background: var(--nav-bg); border-right: 1px solid var(--border);
+            position: fixed; left: 0; top: 0; z-index: 100;
+            padding: 20px; display: flex; flex-direction: column;
+        }
+        .logo-text {
+            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.4rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 40px; text-align: center;
+        }
+        
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px; color: var(--text-muted); text-decoration: none;
+            border-radius: 10px; margin-bottom: 5px; transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: var(--glass); color: var(--neon-blue);
+            border-left: 3px solid var(--neon-blue);
+        }
+        .nav-link i { width: 25px; }
+
+        /* --- MAIN CONTENT --- */
+        .main {
+            margin-left: 260px; width: 100%; padding: 30px;
+        }
+
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px;
+        }
+        .page-title { font-size: 1.8rem; font-weight: 700; border-left: 4px solid var(--neon-pink); padding-left: 15px; }
+
+        /* --- STAT CARDS --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card {
+            background: var(--bg-panel); padding: 20px; border-radius: 15px;
+            border: 1px solid var(--border); position: relative; overflow: hidden;
+        }
+        .stat-card h3 { font-size: 2.5rem; color: var(--neon-blue); margin-bottom: 5px; }
+        .stat-card p { color: var(--text-muted); font-size: 0.9rem; }
+        .stat-card i {
+            position: absolute; right: -10px; bottom: -10px; font-size: 5rem;
+            color: var(--border); opacity: 0.2;
+        }
+
+        /* --- TABLES & LISTS --- */
+        .panel-card {
+            background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: 15px; padding: 20px; margin-bottom: 20px;
+        }
+        .item-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px;
+        }
+        .item-row:last-child { border-bottom: none; }
+
+        /* --- BADGES --- */
+        .badge { padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+        .b-pen { background: #ffc107; color: #000; }
+        .b-pro { background: var(--neon-blue); color: #000; }
+        .b-com { background: #28a745; color: #fff; }
+
+        /* --- FORMS --- */
+        input, select, textarea {
+            width: 100%; padding: 12px; background: var(--bg-input); border: 1px solid var(--border);
+            color: var(--text-main); border-radius: 8px; margin-bottom: 10px; outline: none;
+        }
+        input:focus { border-color: var(--neon-blue); }
+
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;
+        }
+        .btn-primary { background: var(--neon-blue); color: #000; }
+        .btn-danger { background: #ff4d4d; color: white; }
+        .btn-success { background: #28a745; color: white; }
+
+        /* --- TOAST --- */
+        #toast-box {
+            position: fixed; top: 20px; right: 20px; z-index: 3000;
+        }
+        .toast {
+            background: var(--bg-panel); border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            padding: 12px 20px; border-radius: 8px; margin-bottom: 10px;
+            animation: slideIn 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        @keyframes slideIn { from{transform: translateX(100%)} to{transform: translateX(0)} }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .sidebar { left: -260px; transition: 0.3s; }
+            .sidebar.active { left: 0; }
+            .main { margin-left: 0; padding: 15px; padding-top: 70px; }
+            .menu-btn { display: block !important; font-size: 1.5rem; cursor: pointer; }
+        }
+        .menu-btn { display: none; }
+        .section { display: none; animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    </style>
+</head>
+<body>
+
+    <div id="toast-box"></div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo-text"><i class="fa-solid fa-user-secret"></i> ADMIN</div>
+        <nav>
+            <a href="#" onclick="nav('dashboard')" class="nav-link active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="#" onclick="nav('products')" class="nav-link"><i class="fa-solid fa-box"></i> Products</a>
+            <a href="#" onclick="nav('orders')" class="nav-link"><i class="fa-solid fa-cart-shopping"></i> Orders</a>
+            <a href="#" onclick="nav('tickets')" class="nav-link"><i class="fa-solid fa-headset"></i> Support Tickets</a>
+            <a href="#" onclick="nav('settings')" class="nav-link"><i class="fa-solid fa-gear"></i> Settings</a>
+            <!-- <a href="#" onclick="nav('users')" class="nav-link"><i class="fa-solid fa-users"></i> Users</a> -->
+        </nav>
+        <button onclick="logout()" style="margin-top:auto; background:none; border:1px solid #ff4d4d; color:#ff4d4d; padding:10px; border-radius:8px; cursor:pointer;">Logout</button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        
+        <!-- Top Header -->
+        <div class="header">
+            <div style="display:flex; gap:15px; align-items:center;">
+                <i class="fa-solid fa-bars menu-btn" onclick="toggleSidebar()"></i>
+                <h2 class="page-title" id="pageTitle">Dashboard</h2>
+            </div>
+            <button onclick="toggleTheme()" style="background:none; border:none; font-size:1.5rem; color:var(--text-main); cursor:pointer;"><i id="themeIcon" class="fa-solid fa-sun"></i></button>
+        </div>
+
+        <!-- 1. DASHBOARD -->
+        <div id="dashboard" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="statOrders">0</h3>
+                    <p>Total Orders</p>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <div class="stat-card">
+                    <h3 id="statProducts">0</h3>
+                    <p>Total Products</p>
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div class="stat-card">
+                    <h3 id="statTickets">0</h3>
+                    <p>Support Tickets</p>
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+            </div>
+            
+            <div class="panel-card">
+                <h3><i class="fa-solid fa-bullhorn"></i> Current Marquee Status</h3>
+                <p id="dashMarqueeText" style="color:var(--neon-blue); margin-top:10px;">Loading...</p>
+            </div>
+        </div>
+
+        <!-- 2. PRODUCTS -->
+        <div id="products" class="section">
+            <div class="panel-card">
+                <h3>Add New Product</h3>
+                <form id="addProductForm" style="margin-top:15px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <input type="text" id="pName" placeholder="Product Name" required>
+                        <input type="number" id="pPrice" placeholder="Price (PKR)" required>
+                    </div>
+                    <input type="url" id="pImg" placeholder="Image URL" required>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </form>
+            </div>
+
+            <div class="panel-card">
+                <h3>Product List</h3>
+                <div id="productList"></div>
+            </div>
+        </div>
+
+        <!-- 3. ORDERS -->
+        <div id="orders" class="section">
+            <div class="panel-card">
+                <h3>Manage Orders</h3>
+                <div id="orderList"></div>
+            </div>
+        </div>
+
+        <!-- 4. TICKETS -->
+        <div id="tickets" class="section">
+            <div class="panel-card">
+                <h3>Support Requests</h3>
+                <div id="ticketList"></div>
+            </div>
+        </div>
+
+        <!-- 5. SETTINGS -->
+        <div id="settings" class="section">
+            <div class="panel-card">
+                <h3>Marquee Settings</h3>
+                <p style="color:var(--text-muted); margin-bottom:15px;">Control the scrolling text on the user dashboard.</p>
+                
+                <form id="marqueeForm">
+                    <label>Marquee Text</label>
+                    <input type="text" id="mText" placeholder="e.g. Welcome to Waisi Store!" required>
+                    
+                    <label>Status</label>
+                    <select id="mStatus">
+                        <option value="true">Enabled (Show)</option>
+                        <option value="false">Disabled (Hide)</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-primary">Update Settings</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, setDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // 🔥 SAME CONFIG AS USER APP 🔥
+        const firebaseConfig = {
+            apiKey: "AIzaSyCo6W6Tzze5IvgcblQGvRssZcIUNlS9gQ0",
+            authDomain: "waisi-store.firebaseapp.com",
+            databaseURL: "https://waisi-store-default-rtdb.firebaseio.com",
+            projectId: "waisi-store",
+            storageBucket: "waisi-store.firebasestorage.app",
+            messagingSenderId: "670605149716",
+            appId: "1:670605149716:web:1c3becc5e7aa4c9b328901"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- UI UTILS ---
+        window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('active');
+        
+        window.nav = (id) => {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            document.getElementById('pageTitle').innerText = id.charAt(0).toUpperCase() + id.slice(1);
+            if(window.innerWidth < 768) toggleSidebar();
+        }
+
+        const toast = (msg) => {
+            const box = document.getElementById('toast-box');
+            const div = document.createElement('div');
+            div.className = 'toast';
+            div.innerHTML = `<i class="fa-solid fa-check"></i> ${msg}`;
+            box.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        // Theme
+        window.toggleTheme = () => {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.className = "fa-solid fa-sun";
+                localStorage.setItem('adminTheme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.className = "fa-solid fa-moon";
+                localStorage.setItem('adminTheme', 'light');
+            }
+        }
+        if(localStorage.getItem('adminTheme') === 'light') toggleTheme();
+
+        window.logout = () => signOut(auth).then(() => window.location.href = "index.html");
+
+        // --- AUTH CHECK ---
+        onAuthStateChanged(auth, user => {
+            if(user) {
+                // In a real app, verify admin email here
+                loadStats();
+                loadProducts();
+                loadOrders();
+                loadTickets();
+                loadSettings();
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        // --- 1. DASHBOARD STATS ---
+        async function loadStats() {
+            // Basic counts (Real apps should use aggregation queries or counters)
+            onSnapshot(collection(db, "orders"), snap => document.getElementById('statOrders').innerText = snap.size);
+            onSnapshot(collection(db, "products"), snap => document.getElementById('statProducts').innerText = snap.size);
+            onSnapshot(collection(db, "tickets"), snap => document.getElementById('statTickets').innerText = snap.size);
+        }
+
+        // --- 2. PRODUCT LOGIC ---
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Adding...";
+            
+            await addDoc(collection(db, "products"), {
+                name: document.getElementById('pName').value,
+                price: document.getElementById('pPrice').value,
+                image: document.getElementById('pImg').value,
+                createdAt: new Date()
+            });
+            
+            e.target.reset();
+            toast("Product Added!");
+            btn.innerText = "Add Product";
+        });
+
+        function loadProducts() {
+            onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), snap => {
+                const div = document.getElementById('productList');
+                div.innerHTML = "";
+                snap.forEach(d => {
+                    const p = d.data();
+                    div.innerHTML += `
+                        <div class="item-row">
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <img src="${p.image}" style="width:40px; height:40px; border-radius:5px; object-fit:cover;">
+                                <div>
+                                    <div style="font-weight:600;">${p.name}</div>
+                                    <small style="color:var(--text-muted)">PKR ${p.price}</small>
+                                </div>
+                            </div>
+                            <button onclick="deleteProduct('${d.id}')" class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem;">Delete</button>
+                        </div>`;
+                });
+            });
+        }
+        window.deleteProduct = async (id) => {
+            if(confirm("Delete this product?")) {
+                await deleteDoc(doc(db, "products", id));
+                toast("Product Deleted");
+            }
+        }
+
+        // --- 3. ORDERS LOGIC ---
+        function loadOrders() {
+            onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
+                const div = document.getElementById('orderList');
+                div.innerHTML = "";
+                snap.forEach(d => {
+                    const o = d.data();
+                    let badge = "b-pen";
+                    if(o.status === "Processing") badge = "b-pro";
+                    if(o.status === "Completed") badge = "b-com";
+
+                    div.innerHTML += `
+                        <div class="item-row">
+                            <div>
+                                <div style="font-weight:600;">${o.productName}</div>
+                                <small style="color:var(--text-muted)">User: ${o.userEmail} | ${o.fullName}</small>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <span class="badge ${badge}">${o.status}</span>
+                                <select onchange="updateStatus('${d.id}', this.value)" style="width:auto; margin:0; padding:5px;">
+                                    <option value="" disabled selected>Change Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+        window.updateStatus = async (id, status) => {
+            await updateDoc(doc(db, "orders", id), { status: status });
+            toast("Order Status Updated to " + status);
+        }
+
+        // --- 4. TICKET LOGIC ---
+        function loadTickets() {
+            onSnapshot(query(collection(db, "tickets"), orderBy("createdAt", "desc")), snap => {
+                const div = document.getElementById('ticketList');
+                div.innerHTML = "";
+                snap.forEach(d => {
+                    const t = d.data();
+                    div.innerHTML += `
+                        <div class="panel-card" style="margin-bottom:10px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <strong>${t.userEmail}</strong>
+                                <small style="color:var(--text-muted)">${new Date(t.createdAt.seconds*1000).toLocaleDateString()}</small>
+                            </div>
+                            <p style="background:var(--bg-input); padding:10px; border-radius:5px;">${t.message}</p>
+                            
+                            <div style="margin-top:10px;">
+                                <input type="text" id="reply-${d.id}" placeholder="Type reply here..." value="${t.reply || ''}">
+                                <button onclick="sendReply('${d.id}')" class="btn btn-primary" style="width:100%;">Send Reply</button>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+        window.sendReply = async (id) => {
+            const val = document.getElementById('reply-'+id).value;
+            await updateDoc(doc(db, "tickets", id), { reply: val });
+            toast("Reply Sent!");
+        }
+
+        // --- 5. SETTINGS (MARQUEE) ---
+        function loadSettings() {
+            onSnapshot(doc(db, "settings", "marquee"), (snap) => {
+                if(snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('mText').value = data.text;
+                    document.getElementById('mStatus').value = data.isEnabled ? "true" : "false";
+                    
+                    document.getElementById('dashMarqueeText').innerText = `${data.text} (${data.isEnabled ? 'ON' : 'OFF'})`;
+                }
+            });
+        }
+
+        document.getElementById('marqueeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('mText').value;
+            const isEnabled = document.getElementById('mStatus').value === "true";
+
+            await setDoc(doc(db, "settings", "marquee"), {
+                text: text,
+                isEnabled: isEnabled
+            });
+            toast("Marquee Settings Updated!");
+        });
+
+    </script>
+</body>
+</html>
